@@ -2,16 +2,13 @@
 #include <string.h>
 #include "message.h"
 
-void sys_err (char *msg)
-{
-  puts (msg);
-  exit (1);
-}
-
 int main ()
 {
   int semid;                    
-  int shmid;                    
+  int shmid; 
+  struct sembuf sops;
+  sops.sem_num=0;
+  sops.sem_op=0;
   message_t *msg_p;            
                                 
   char s[MAX_STRING];
@@ -30,11 +27,9 @@ int main ()
 
   while (1)
     {
+      if(semctl(semid,0,GETVAL,1)) continue;
       if (msg_p->type != MSG_TYPE_EMPTY)
         {
-          if (semctl (semid, 0, GETVAL, 0)) 
-            continue;
-
           semctl (semid, 0, SETVAL, 1); 
 
           if (msg_p->type == MSG_TYPE_STRING)

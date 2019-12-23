@@ -19,3 +19,5 @@ typedef struct
   int type;
   char string [MAX_STRING];
 } message_t;
+
+void sys_err (char *msg);
